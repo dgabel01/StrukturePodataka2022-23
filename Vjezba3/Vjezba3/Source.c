@@ -32,6 +32,8 @@ int IspisIzDatoteke(char* imedatoteke); //E
 //int DodajIza(position p, char* ime, char* prezime, int godina_rodenja, char* prezime_trazenog); 3A
 //int DodajIspred(position p, char* ime, char* prezime, int godina_rodenja, char* prezime_trazenog); 3B
 
+int SortiraniUnos(position p); //sortirani unos
+
 int main()
 {
     osoba head = { .ime = {0}, .prezime = {0}, .godina_rodenja = 0 };
@@ -50,6 +52,7 @@ int main()
             "\nU - upis u datoteku"
             "\nC - citanje iz datoteke"
             "\nS - sortiranje liste po prezimenima"
+            "\nX- sortirani unos na pocetak"
             "\nQ - kraj programa\n\n");
         scanf(" %c", &izbor);
 
@@ -128,6 +131,11 @@ int main()
 
             Sortiraj(&head);
             printf("\nLista je uspjesno sortirana.\n\n");
+            break;
+
+
+        case 'X':
+            SortiraniUnos(&head);
             break;
 
         default:
@@ -374,3 +382,24 @@ int DodajIspred(position p, char* ime, char* prezime, int godina_rodenja, char* 
     return 0;
 }
 */
+
+
+int SortiraniUnos(position p)  //head
+{
+    char ime[MAX] = { 0 };
+    char prezime[MAX] = { 0 };
+    int godina = 0;
+
+    printf("Ime:\n");
+    scanf("%s", ime);
+    printf("Prezme:\n");
+    scanf("%s", prezime);
+    printf("Godina:\n");
+    scanf("%d", &godina);
+
+
+    DodajNaPocetak(p, ime, prezime, godina);
+    Sortiraj(p);
+
+    return 0;
+}
