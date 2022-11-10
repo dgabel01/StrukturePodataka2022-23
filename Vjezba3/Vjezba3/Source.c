@@ -52,7 +52,7 @@ int main()
             "\nU - upis u datoteku"
             "\nC - citanje iz datoteke"
             "\nS - sortiranje liste po prezimenima"
-            "\nX- sortirani unos na pocetak"
+            "\nX- sortirani unos "
             "\nQ - kraj programa\n\n");
         scanf(" %c", &izbor);
 
@@ -384,22 +384,41 @@ int DodajIspred(position p, char* ime, char* prezime, int godina_rodenja, char* 
 */
 
 
-int SortiraniUnos(position p)  //head
+int SortiraniUnos(position p)  // p head
 {
     char ime[MAX] = { 0 };
     char prezime[MAX] = { 0 };
-    int godina = 0;
+    int godinarodenja = 0;
+    position novi = NULL;
+    int cmp = 0;
 
     printf("Ime:\n");
     scanf("%s", ime);
-    printf("Prezme:\n");
+    printf("Prezime:\n");
     scanf("%s", prezime);
-    printf("Godina:\n");
-    scanf("%d", &godina);
+    printf("Godina rodenja:\n");
+    scanf("%d", &godinarodenja);
 
 
-    DodajNaPocetak(p, ime, prezime, godina);
-    Sortiraj(p);
+    novi = StvoriOsobu(ime,prezime,godinarodenja);
 
+    position prev = p;          //za pomicanje i usporedbu
+    position temp = p->next;
+
+    //nadi mjesto
+
+    while (temp != NULL) {
+        cmp = strcmp(temp->prezime, novi->prezime);
+        if (cmp == 0) { // prezimena jednaka
+            cmp = strcmp(temp->ime, novi->ime);//gledaj imena
+        }
+        if (cmp >= 0) { //nadeno mjesto
+            break;
+        }
+        prev = temp;
+        temp = temp->next;
+    }
+    novi->next = prev->next;
+    prev->next = novi;
     return 0;
 }
