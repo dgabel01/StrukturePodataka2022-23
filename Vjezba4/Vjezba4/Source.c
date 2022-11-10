@@ -55,16 +55,19 @@ int main() {
 	IspisPolinoma(&head2);
 	printf("\n\n\n");
 
-	PomnoziPolinome(&head1, &head2,&headZbroj);
-	IspisPolinoma(headZbroj.next);
-	ZbrojiIsteEksponente(&headZbroj);
+	PomnoziPolinome(&head1, &head2,&headUmnozak);
+	IspisPolinoma(headUmnozak.next);
+	ZbrojiIsteEksponente(&headUmnozak);
 	printf("\n\n");
 	printf("Nakon zbrajanja istih eksp:\n\n\n");
-	IspisPolinoma(headZbroj.next);
-
-
-	ZbrojiPolinome(&head1, &head2, &headUmnozak);
 	IspisPolinoma(headUmnozak.next);
+
+
+
+	ZbrojiPolinome(&head1, &head2, &headZbroj);
+	printf("\n\n\n");
+	printf("Zbroj:\n\n");
+	IspisPolinoma(headZbroj.next);
 	
 
 	return 0;
@@ -232,13 +235,13 @@ int ZbrojiIsteEksponente(position p)   //headZbroj
 			free(trenutni);	//oslobada se memorija trenutnog
 
 			trenutni = sljedeci;	//sljedeci postaje trenutni
-			sljedeci = sljedeci->next;	//new_el sljedeci element
+			sljedeci = sljedeci->next;	//sljedeci element
 			prethodni=prethodni;	//prethodni ostaje isti
 		}
 		else {
-			prethodni=trenutni;	//trenutni postaje prethodni
-			trenutni=sljedeci;	//new_el trenutni
-			sljedeci = sljedeci->next; //new_el sljedeci
+			prethodni=trenutni;	
+			trenutni=sljedeci;	
+			sljedeci = sljedeci->next; 
 		}
 	}
 	 
@@ -252,7 +255,88 @@ int ZbrojiPolinome(position p1, position p2, position rez)
 	position rezhead = NULL;
 	rezhead = rez;
 
+	while (p1 != NULL && p2 != NULL) {
+		if(p1->exp < p2->exp) {
+			novi = (position)malloc(sizeof(polinom));	//stvara se novi clan
 
+			novi->exp = p1->exp;	//unos podataka
+			novi->coef = p1->coef;
+			
+			novi->next = rez->next;	//dodaje se u listu
+			rez->next = novi;
+
+			p1 = p1->next;
+
+			rez = rez->next;
+		}
+
+
+		else if (p1->exp > p2->exp) {
+			novi = (position)malloc(sizeof(polinom));	//stvara se novi clan
+
+			novi->exp = p2->exp;	//unos podataka
+			novi->coef = p2->coef;
+
+			novi->next = rez->next;	//dodaje se u listu
+			rez->next = novi;
+
+			p2 = p2->next;
+			rez = rez->next;
+		}
+
+
+		else if (p1->exp == p2->exp) {
+			novi = (position)malloc(sizeof(polinom));	
+
+			novi->exp = p2->exp;	
+			novi->coef = p2->coef + p1->coef;
+
+			novi->next = rez->next;	
+			rez->next = novi;
+
+			p1 = p1->next;
+			p2 = p2->next;
+
+			rez = rez->next;
+		}
+	}
+
+
+	//slucajevi ako se dode do kraja jednog ili drugog polinoma
+
+
+
+	if (p1 != NULL) {
+		while (p1 != NULL) {
+			novi = (position)malloc(sizeof(polinom));
+
+			novi->coef = p1->coef;
+			novi->exp = p1->exp;
+
+			novi->next = rez->next;	//dodaje se u listu
+			rez->next = novi;
+
+			p1 = p1->next;
+			rez = rez->next;
+		}
+
+	}
+
+	if (p2 != NULL) {
+		while (p2 != NULL) {
+			novi = (position)malloc(sizeof(polinom));
+
+			novi->coef = p2->coef;
+			novi->exp = p2->exp;
+
+			novi->next = rez->next;	
+			rez->next = novi;
+
+			p2 = p2->next;
+			rez = rez->next;
+		}
+
+	}
 
 	return 0;
 }
