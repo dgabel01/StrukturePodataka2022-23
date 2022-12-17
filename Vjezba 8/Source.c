@@ -213,23 +213,17 @@ position delete(position root, int vrijednost)
 	if (root == NULL)
 		return root;
 
-	// If the key to be deleted
-	// is smaller than the root's
-	// key, then it lies in left subtree
+	//vrijednost je u lijevom podstablu
 	if (vrijednost < root->vrijednost)
 		root->lijevo = delete(root->lijevo, vrijednost);
 
-	// If the key to be deleted
-	// is greater than the root's
-	// key, then it lies in right subtree
+	//vrijednost je u desnom podstablu
 	else if (vrijednost > root->vrijednost)
 		root->desno= delete(root->desno, vrijednost);
 
-	// if key is same as root's key,
-	// then This is the node
-	// to be deleted
+	//vrijednost ista kao root vrijednost
 	else {
-		// node with only one child or no child
+		// cvor sa jednim djetetom ili bez djece
 		if (root->lijevo == NULL) {
 			position temp = root->desno;
 			free(root);
@@ -241,16 +235,14 @@ position delete(position root, int vrijednost)
 			return temp;
 		}
 
-		// node with two children:
-		// Get the inorder successor
-		// (smallest in the right subtree)
+		// cvor sa dvoje djece, nadi najmanji u desnom podstablu
+	
 		position temp = minCvor(root->desno);
 
-		// Copy the inorder
-		// successor's content to this node
+		//kopiraj vrijednost najmanjeg
 		root->vrijednost = temp->vrijednost;
 
-		// Delete the inorder successor
+		// izbrisi najmanji
 		root->desno = delete(root->desno, temp->vrijednost);
 	}
 	return root;
