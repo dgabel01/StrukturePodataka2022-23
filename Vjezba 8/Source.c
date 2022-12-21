@@ -1,6 +1,10 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
+#include<stdbool.h>
+#define PRAZNO_STABLO 0
+#define NAREDBA_MAX_LENGTH 20
 
 //binarno stablo - dodaj element, ispis(4), pretrazi, izbrisi 
 
@@ -17,7 +21,7 @@ typedef struct Stablo {
 //funkcije
 
 position dodajElement(position root,int vrijednost);
-position stvoriNovi(position vrijednost);
+position stvoriNovi(int vrijednost);
 int inorder(position root);
 int preorder(position root);
 int postorder(position root);
@@ -30,44 +34,83 @@ int levelorder(position root);
 int printCurrentLevel(position root, int level);
 int height(position root);
 
-
+bool isValidEl(position root, int el, int n); 
 
 int main()
 {
 	//dodavanje
+	char naredba[NAREDBA_MAX_LENGTH] = { 0 };
+	int el = -1; //should validate as move than 0 and an int
+	int n = 0; //checks if scanf was sucessful
 	position root = NULL;
-	root =dodajElement(root, 50);
-	dodajElement(root, 30);
-	dodajElement(root, 20);
-	dodajElement(root, 5);
-	dodajElement(root, 4);
-	dodajElement(root, 1);
-	dodajElement(root, 2);
-	//4 ispisa
-	printf("inorder:\n");
-	inorder(root);
-	printf("\n\n");
-	printf("preorder:\n");
-	preorder(root);
-	printf("\n\n");
-	printf("postorder:\n");
-	postorder(root);
-	printf("\n\n");
-	printf("levelorder:\n");
-	levelorder(root);
-	printf("\n\n");
-	//pretraga
-	position temp = pretrazi(root, 20);
-	printf("%d ", temp->vrijednost);
-	printf("\n");
-	//brisanje
-	root = delete(root, 1);
-	root = delete(root, 2);
-	preorder(root);
-	
-	
+	position p = NULL;
+	bool validEl = false; 
 
+	while (el <= 0)
+	{
+		printf("Unesite prvi element: ");
+		n = scanf(" %d", &el);
+	}
+	printf("\nel: %d\n", el);
+	root = dodajElement(root, el); //easy way to not have empty tree
+	
+	while (strcmp(naredba, "quit") != 0) {  
+		printf("\nOpcije:\n"
+			"dodaj [el] - dodaj broj u stablo\n" 
+			"preorder - preorder ispis\n"
+			"inorder - inorder ispis\n"
+			"postorder - postorder ispis\n"
+			"level - level order ispis\n"
+			"find [el] - pretrazi broj\n"
+			"delete [el] - izbrisi broj\n"
+			"quit - zavrsi program\n");
 
+			scanf(" %s", naredba);
+			
+			if (strcmp(naredba, "quit") == 0)
+				continue;
+
+			if (strcmp(naredba, "dodaj") == 0) {
+				n = scanf(" %d", &el);
+				validEl = isValidEl(root, el, n);
+				if (validEl == false)
+					printf("Ne dozvoljena vrijenost\n");
+					continue;
+				dodajElement(root, el);
+			} 
+			else if (strcmp(naredba, "preorder") == 0) {
+				preorder(root);
+			}  
+			else if (strcmp(naredba, "inorder") == 0) {
+				inorder(root);
+			}
+			else if (strcmp(naredba, "postorder") == 0) {
+				postorder(root);
+			} 
+			else if (strcmp(naredba, "level") == 0) {
+				levelorder(root);
+			}
+			else if (strcmp(naredba, "delete") == 0) {
+				scanf(" %d", &el);
+				root = delete(root, el);
+			} 
+			else if (strcmp(naredba, "find") == 0) {
+				scanf(" %d", &el);
+				p = pretrazi(root, el);
+				if (p == NULL) {
+					printf("Nema vrijednosti %d u stablu\n", el);
+				}
+				else {
+					printf("Element s vrijednost %d se nalazi na adresi %p\n", p->vrijednost, p);
+				}
+			}
+			else {
+				printf("Nepoznata naredba, pokusajte ponovo\n");
+			}
+			puts("");
+	}
+	puts("");
+	
 
 	return 0;
 }
@@ -109,7 +152,7 @@ position stvoriNovi(int vrijednost)
 int inorder(position root)
 {
 	if (root == NULL) {
-		return;
+		return PRAZNO_STABLO;
 	}
 		inorder(root->lijevo);
 		printf("%d ", root->vrijednost);
@@ -121,7 +164,7 @@ int inorder(position root)
 int preorder(position root)
 {
 	if (root == NULL) {
-		return;
+		return PRAZNO_STABLO;
 	}
 	printf("%d ", root->vrijednost);
 	preorder(root->lijevo);
@@ -133,7 +176,7 @@ int preorder(position root)
 int postorder(position root)
 {
 	if (root ==NULL) {
-		return;
+		return PRAZNO_STABLO;
 	}
 
 	postorder(root->lijevo);
@@ -157,7 +200,7 @@ int levelorder(position root)
 int printCurrentLevel(position root, int level)
 {
 	if (root == NULL) {
-		return;
+		return PRAZNO_STABLO;
 	}
 	if (level == 1) {
 		printf("%d ", root->vrijednost);
@@ -173,7 +216,7 @@ int printCurrentLevel(position root, int level)
 int height(position root)
 {
 	if (root == NULL) {
-		return 0;
+		return PRAZNO_STABLO;
 	}
 	else {
 		/* compute the height of each subtree */
@@ -260,3 +303,17 @@ position minCvor(position cvor)
 
 }
 
+
+bool isValidEl(position root, int el, int n) 
+{
+	position p = NULL;
+	p = pretrazi(root, el); 
+	if (p == root && root->vrijednost != el) 
+		return false;
+	if (n != 1)
+		return false;
+	if (el <= 0) 
+		return false;
+	
+	return true;
+}
