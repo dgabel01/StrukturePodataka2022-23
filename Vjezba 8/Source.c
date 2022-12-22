@@ -51,7 +51,6 @@ int main()
 		printf("Unesite prvi element: ");
 		n = scanf(" %d", &el);
 	}
-	printf("\nel: %d\n", el);
 	root = dodajElement(root, el); //easy way to not have empty tree
 	
 	while (strcmp(naredba, "quit") != 0) {  
