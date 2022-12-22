@@ -40,8 +40,8 @@ int main()
 {
 	//dodavanje
 	char naredba[NAREDBA_MAX_LENGTH] = { 0 };
-	int el = -1; //should validate as move than 0 and an int
-	int n = 0; //checks if scanf was sucessful
+	int el = -1; 
+	int n = 0; 
 	position root = NULL;
 	position p = NULL;
 	bool validEl = false; 
